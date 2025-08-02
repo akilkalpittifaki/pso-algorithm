@@ -1,0 +1,38 @@
+Parçacık Sürü Optimizasyonu (PSO) Uygulaması
+
+Bu uygulama, Parçacık Sürü Optimizasyonu (PSO) algoritmasını görsel bir arayüz ile sunan bir C# uygulamasıdır. PSO, kuş sürüleri ve balık okullarının sosyal davranışlarından esinlenen, popülasyon tabanlı bir optimizasyon tekniğidir.
+
+Uygulamanın Özellikleri:
+
+1. Kullanıcı Arayüzü ile PSO Parametrelerini Yapılandırma:
+   - Parçacık sayısı
+   - Boyut (dimension) sayısı
+   - Maksimum iterasyon sayısı
+   - Bilişsel katsayı (c1) ve sosyal katsayı (c2)
+   - Maksimum hız (velocity)
+   - Arama uzayı sınırları
+
+2. Desteklenen Test Fonksiyonları:
+   - Six-hump Camel Back fonksiyonu (varsayılan)
+   - Sphere fonksiyonu
+   - Rosenbrock fonksiyonu
+
+3. Gerçek Zamanlı Görselleştirme:
+   - İterasyonlar boyunca en iyi uygunluk değerini gösteren yakınsama grafiği
+   - Optimum çözümü gösteren sonuç ekranı
+
+4. Temel Bileşenler:
+   - Particle.cs: Konum, hız ve kişisel en iyi değeri içeren parçacık nesnesini tanımlar
+   - PSO.cs: Sürü başlatma ve konum/hız güncelleme işlemlerini içeren optimizasyon algoritmasını uygular
+   - TestFunctions.cs: Test için matematiksel kıyaslama fonksiyonlarını içerir
+   - Form1.cs: Parametre girişleri ve görselleştirme için kullanıcı arayüzünü sağlar
+   - ChartHelper.cs: Grafik oluşturma ve gerçek zamanlı çizim işlemlerini yönetir
+
+Uygulama, standart PSO metodolojisini takip eder: parçacıkların hızları ve konumları bilişsel ve sosyal bileşenlere dayalı olarak güncellenir, optimizasyon süreci boyunca kişisel ve global en iyi çözümler korunur.
+
+Çalışma Prensibi:
+1. Kullanıcı PSO parametrelerini ayarlar ve bir test fonksiyonu seçer
+2. "Başlat" düğmesine tıklanarak PSO algoritması çalıştırılır
+3. Her iterasyonda parçacıkların konumları ve hızları güncellenir
+4. İterasyon ilerledikçe, algoritma optimum çözüme yakınsar
+5. Sonuçlar grafik üzerinde gösterilir ve metin olarak raporlanır

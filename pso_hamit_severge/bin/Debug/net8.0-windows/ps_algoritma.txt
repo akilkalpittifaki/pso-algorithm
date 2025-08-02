@@ -1,0 +1,109 @@
+PARÇACIK SÜRÜ OPTİMİZASYONU (PSO) ALGORİTMA AÇIKLAMASI
+==========================================================
+
+PSO algoritması, kuş ve balık sürülerinin sosyal davranışlarından esinlenerek geliştirilmiş, popülasyon temelli bir optimizasyon tekniğidir. Algoritma, probleme ait arama uzayında rasgele oluşturulan çözüm adaylarını (parçacıkları) kullanarak en iyi çözümü bulmaya çalışır.
+
+ALGORİTMANIN GENEL AKIŞI
+--------------------------
+1. Başlangıç popülasyonu rasgele oluşturulur
+2. Her parçacığın uygunluk değeri hesaplanır
+3. pbest (parçacığın kendi en iyi değeri) ve gbest (tüm sürünün en iyi değeri) belirlenir
+4. Her iterasyonda:
+   a) Her parçacığın hızı güncellenir
+   b) Her parçacığın konumu güncellenir
+   c) Yeni uygunluk değerleri hesaplanır
+   d) pbest ve gbest değerleri güncellenir
+5. İterasyon sayısı tamamlanınca en iyi sonuç döndürülür
+
+UYGULAMA YAPISI VE ÇALIŞMA SIRASI
+---------------------------------
+Uygulamamız aşağıdaki sırayla çalışır:
+
+1. Form1.cs içindeki btnStart_Click metodu tetiklendiğinde:
+   - Kullanıcı arayüzünden parametreler alınır (parçacık sayısı, boyut, iterasyon sayısı, c1, c2, vMax, sınırlar)
+   - PSO sınıfı oluşturulur ve parametreler aktarılır
+
+2. PSO sınıfındaki InitializeSwarm metodu çalışır:
+   - Parçacık nesneleri oluşturulur ve rasgele konumlandırılır
+   - Her parçacığın başlangıç uygunluk değeri hesaplanır
+   - İlk pbest değerleri ve gbest değeri belirlenir
+
+3. PSO sınıfındaki Optimize metodu çalışır:
+   - İterasyon döngüsü başlar
+   - Her iterasyonda, her parçacık için:
+     a) Particle.UpdateVelocity metodu çağrılır
+     b) Particle.UpdatePosition metodu çağrılır
+     c) Yeni uygunluk değeri hesaplanır
+     d) Particle.UpdatePersonalBest metodu çağrılır
+     e) Gerekirse gbest güncellenir
+   - Yakınsama geçmişi kaydedilir (ConvergenceHistory)
+   - IterationCompleted eventi tetiklenir (gerçek zamanlı güncelleme için)
+   
+4. İterasyon tamamlandığında, sonuçlar Form1'e döndürülür:
+   - Yakınsama grafiği çizilir
+   - En iyi değer ve parametreler gösterilir
+
+KULLANILAN FORMÜLLER
+--------------------
+PSO algoritmasında iki temel formül vardır:
+
+1. Hız Güncelleme Formülü:
+   v_i^(k+1) = v_i^k + c1*r1*(pbest_i^k - x_i^k) + c2*r2*(gbest^k - x_i^k)
+   
+   Burada:
+   - v_i^(k+1): i. parçacığın k+1. iterasyondaki hızı
+   - v_i^k: i. parçacığın k. iterasyondaki hızı
+   - c1: Bilişsel öğrenme faktörü
+   - c2: Sosyal öğrenme faktörü
+   - r1, r2: [0,1] aralığında rasgele değerler
+   - pbest_i^k: i. parçacığın kişisel en iyi konumu
+   - gbest^k: Tüm sürünün global en iyi konumu
+   - x_i^k: i. parçacığın k. iterasyondaki konumu
+
+2. Konum Güncelleme Formülü:
+   x_i^(k+1) = x_i^k + v_i^(k+1)
+   
+   Burada:
+   - x_i^(k+1): i. parçacığın k+1. iterasyondaki konumu
+   - x_i^k: i. parçacığın k. iterasyondaki konumu
+   - v_i^(k+1): i. parçacığın k+1. iterasyondaki hızı
+
+SINIF VE FONKSİYON AÇIKLAMALARI
+-------------------------------
+1. Particle Sınıfı:
+   - Yapıcı (Constructor): Parçacığın boyutuna göre konum ve hız vektörlerini başlatır
+   - UpdateVelocity: Hız güncelleme formülünü uygular
+   - UpdatePosition: Konum güncelleme formülünü uygular
+   - UpdatePersonalBest: Parçacığın kişisel en iyi değerini günceller
+
+2. PSO Sınıfı:
+   - Yapıcı (Constructor): Algoritma parametrelerini alır ve veri yapılarını başlatır
+   - InitializeSwarm: Başlangıç popülasyonunu oluşturur
+   - Optimize: Optimizasyon sürecini yürütür
+   - GetSwarm: Tüm parçacıkları döndürür (görselleştirme için)
+
+3. TestFunctions Sınıfı:
+   - SixHumpCamelBack: Test fonksiyonu - Six-hump Camel-back fonksiyonunu hesaplar
+   - Diğer test fonksiyonları (Sphere, Rosenbrock)
+
+4. ChartHelper Sınıfı:
+   - InitializeConvergenceChart: Yakınsama grafiğini başlatır
+   - PlotConvergence: Yakınsama verilerini grafiğe çizer
+
+5. Form1 Sınıfı:
+   - Form1: Kullanıcı arayüzünü başlatır
+   - SetDefaultValues: Varsayılan değerleri ayarlar
+   - btnStart_Click: Optimizasyon sürecini başlatır
+   - RunOptimization: Optimizasyon sürecini yürütür
+   - OnIterationCompleted: Her iterasyon sonunda çağrılır, UI güncellemesi yapar
+
+UYGULAMANIN KULLANDIĞI TEST FONKSİYONU
+-------------------------------------
+Six-hump Camel-back fonksiyonu:
+f(x) = 4x₁² - 2.1x₁⁴ + (1/3)x₁⁶ + x₁x₂ - 4x₂² + 4x₂⁴
+
+Bu fonksiyon, arama aralığı [-5, 5] olduğunda, iki küresel minimum dahil olmak üzere toplam 6 yerel minimuma sahiptir. Bilinen global minimum değeri -1.0316'dır ve x₁ = ±0.0898, x₂ = ∓0.7126 noktalarında elde edilir.
+
+SONUÇ
+-----
+PSO algoritması, basit ama etkili bir yapısı olan, türev bilgisi gerektirmeyen güçlü bir optimizasyon tekniğidir. Uygulamamızda algoritmanın temel prensipleri sadık kalınarak gerçeklenmiş, kullanıcının parametreleri ayarlayabilmesi ve gerçek zamanlı yakınsama grafiğini görebilmesi sağlanmıştır.
